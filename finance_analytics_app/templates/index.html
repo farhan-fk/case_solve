@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section text-center py-5 mb-5">
+    <div class="container">
+        <h1 class="display-4 text-primary mb-4">
+            <i class="fas fa-chart-line me-3"></i>
+            Personal Finance Analytics
+        </h1>
+        <p class="lead text-muted mb-4">
+            Upload your transaction data and get instant insights into your spending patterns, 
+            income sources, and financial trends with beautiful interactive visualizations.
+        </p>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+        <div class="card shadow-lg border-0">
+            <div class="card-header bg-gradient text-white text-center py-4">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-upload me-2"></i>
+                    Upload Your Financial Data
+                </h3>
+            </div>
+            <div class="card-body p-5">
+                <form action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data" class="upload-form">
+                    <div class="upload-area text-center p-5 border-2 border-dashed rounded">
+                        <i class="fas fa-cloud-upload-alt fa-4x text-primary mb-3"></i>
+                        <h5 class="mb-3">Drag and drop your file here or click to browse</h5>
+                        <input type="file" name="file" id="fileInput" class="form-control d-none" accept=".csv,.xlsx,.xls" required>
+                        <button type="button" class="btn btn-primary btn-lg" onclick="document.getElementById('fileInput').click()">
+                            <i class="fas fa-folder-open me-2"></i>
+                            Choose File
+                        </button>
+                        <div class="file-info mt-3 d-none">
+                            <span class="badge bg-success p-2">
+                                <i class="fas fa-file me-1"></i>
+                                <span id="fileName"></span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-success btn-lg px-5" id="uploadBtn" disabled>
+                            <i class="fas fa-analytics me-2"></i>
+                            Start Analysis
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="features-section">
+            <h2 class="text-center mb-5">
+                <i class="fas fa-star me-2"></i>
+                Powerful Features
+            </h2>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-chart-pie fa-3x text-primary"></i>
+                        </div>
+                        <h5>Interactive Charts</h5>
+                        <p class="text-muted">Beautiful pie charts and bar graphs showing your expense categories and income sources</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-trend-up fa-3x text-success"></i>
+                        </div>
+                        <h5>Trend Analysis</h5>
+                        <p class="text-muted">Track your monthly income and expenses trends with cumulative savings visualization</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="feature-card text-center p-4">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-lightbulb fa-3x text-warning"></i>
+                        </div>
+                        <h5>Smart Insights</h5>
+                        <p class="text-muted">Get automated insights about your spending patterns and savings rate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card border-0 bg-light">
+            <div class="card-body p-4">
+                <h4 class="text-center mb-4">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Supported File Formats
+                </h4>
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <div class="format-info p-3">
+                            <i class="fas fa-file-csv fa-2x text-success mb-2"></i>
+                            <h6>CSV Files</h6>
+                            <p class="small text-muted">Comma-separated values</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="format-info p-3">
+                            <i class="fas fa-file-excel fa-2x text-success mb-2"></i>
+                            <h6>Excel Files</h6>
+                            <p class="small text-muted">.xlsx and .xls formats</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="format-info p-3">
+                            <i class="fas fa-shield-alt fa-2x text-primary mb-2"></i>
+                            <h6>Secure Processing</h6>
+                            <p class="small text-muted">Your data stays private</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// File upload handling
+document.getElementById('fileInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        document.getElementById('fileName').textContent = file.name;
+        document.querySelector('.file-info').classList.remove('d-none');
+        document.getElementById('uploadBtn').disabled = false;
+    }
+});
+
+// Drag and drop functionality
+const uploadArea = document.querySelector('.upload-area');
+
+uploadArea.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    uploadArea.classList.add('drag-over');
+});
+
+uploadArea.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    uploadArea.classList.remove('drag-over');
+});
+
+uploadArea.addEventListener('drop', function(e) {
+    e.preventDefault();
+    uploadArea.classList.remove('drag-over');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        document.getElementById('fileInput').files = files;
+        document.getElementById('fileName').textContent = files[0].name;
+        document.querySelector('.file-info').classList.remove('d-none');
+        document.getElementById('uploadBtn').disabled = false;
+    }
+});
+</script>
+{% endblock %}
